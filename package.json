@@ -2,7 +2,7 @@
   "name": "flutterauth",
   "version": "1.0.0",
   "engines": {
-    "npm": "7.11.1",
+    "npm": "7.x",
     "node": "14.16.1"
   },
   "description": "Authentication system for flutter apps",
@@ -26,6 +26,5 @@
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0"
-  },
-  "devDependencies": {}
+  }
 }
