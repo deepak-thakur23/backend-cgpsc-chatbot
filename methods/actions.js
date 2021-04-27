@@ -12,16 +12,26 @@ var functions = {
             res.json({ success: false, message: 'Enter all fields!' });
         }
         else {
-            var newUser = User({
+            User.findOne({
                 name: req.body.name,
-                password: req.body.password,
-            });
-            newUser.save(function (err, newUser) {
-                if (err) {
-                    res.json({ success: false, message: 'Failed to save' });
+            }, function (err, user) {
+                if (err) { throw err }
+                if (user) {
+                    res.send({ success: false, message: `Saved Failed, User Name-: ${req.body.name} already exist..!` })
                 }
                 else {
-                    res.json({ success: true, message: `User Name-: '${req.body.name}' Successfully saved!` });
+                    var newUser = User({
+                        name: req.body.name,
+                        password: req.body.password,
+                    });
+                    newUser.save(function (err, newUser) {
+                        if (err) {
+                            res.json({ success: false, message: 'Failed to save' });
+                        }
+                        else {
+                            res.json({ success: true, message: `User Name-: '${req.body.name}' Successfully saved!` });
+                        }
+                    })
                 }
             })
 
