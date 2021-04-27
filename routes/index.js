@@ -2,7 +2,7 @@ const express = require('express');
 const actions = require('../methods/actions');
 const router = express.Router();
 
-router.get('/', (req, res) => res.redirect('/dashboard'))
+router.get('/', (req, res) => res.send('login page'))
 
 router.get('/dashboard', (req, res) => res.send('dashboard'))
 
