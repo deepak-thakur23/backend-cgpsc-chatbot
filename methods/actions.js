@@ -21,7 +21,7 @@ var functions = {
                     res.json({ success: false, message: 'Failed to save' });
                 }
                 else {
-                    res.json({ success: true, message: ' Successfully saved!' });
+                    res.json({ success: true, message: `User Name-: '${req.body.name}' Successfully saved!` });
                 }
             })
 
