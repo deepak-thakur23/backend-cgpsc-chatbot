@@ -76,6 +76,7 @@ var functions = {
 
     },
     getInfo: function (req, res) {
+        console.log(`Backend Authorization--->${req.headers.authorization}`)
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
             var token = req.headers.authorization.split(' ')[1];
             var decodedtoken = jwt.decode(token, config.secret);
