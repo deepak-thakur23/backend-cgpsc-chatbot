@@ -17,7 +17,10 @@ var functions = {
             }, function (err, user) {
                 if (err) { throw err }
                 if (user) {
-                    res.send({ success: false, message: `Saved Failed, User Name-: ${req.body.name} already exist..!` })
+                    res.status(403).send({
+                        success: false,
+                        message: `Saved Failed, User Name-: ${req.body.name} already exist..!`
+                    })
                 }
                 else {
                     var newUser = User({
