@@ -9,7 +9,7 @@ var functions = {
     addNew: function (req, res) {
 
         if ((!req.body.name) || (!req.body.password)) {
-            res.json({ success: false, message: 'Enter all fields!' });
+            res.status(403).send({ success: false, message: 'Enter all fields!' });
         }
         else {
             User.findOne({
