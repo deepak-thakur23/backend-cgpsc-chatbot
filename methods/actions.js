@@ -82,13 +82,13 @@ var functions = {
             var decodedtoken = jwt.decode(token, config.secret);
             return res.status(200).send({
                 success: true,
-                massage: 'Hello, ' + decodedtoken.name
+                message: 'Hello, ' + decodedtoken.name
             })
         }
         else {
             return res.status(403).send({
                 success: false,
-                massage: 'No headers..!'
+                message: 'No headers..!'
             })
         }
     }
