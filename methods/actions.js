@@ -38,34 +38,51 @@ var functions = {
         }
     },
     authenticate: function (req, res) {
-        User.findOne({
-            name: req.body.name,
-        }, function (err, user) {
-            if (err) { throw err }
-            if (!user) {
-                res.status(403).send({ success: false, message: 'Authentication Failed, User not found..!' })
-            }
-            else
-                user.comparePassword(req.body.password, function (err, isMatch) {
-                    if (isMatch && !err) {
-                        var token = jwt.encode(user, config.secret)
-                        res.send({ success: true, token: token })
-                    }
-                    else {
-                        return res.status(403).send({ success: false, message: 'Authentication Failed, Password incorrect..!' })
-                    }
-                })
-        })
+        if ((!req.body.name) || (!req.body.password)) {
+            res.json({ success: false, message: 'Enter all fields!' });
+        }
+        else {
+            User.findOne({
+                name: req.body.name,
+            }, function (err, user) {
+                if (err) { throw err }
+                if (!user) {
+                    res.status(403).send({
+                        success: false,
+                        message: 'Authentication Failed, User not found..!'
+                    })
+                }
+                else
+                    user.comparePassword(req.body.password, function (err, isMatch) {
+                        if (isMatch && !err) {
+                            var token = jwt.encode(user, config.secret)
+                            res.send({ success: true, token: token })
+                        }
+                        else {
+                            return res.status(403).send({
+                                success: false,
+                                message: 'Authentication Failed, Password incorrect..!'
+                            })
+                        }
+                    })
+            })
+        }
 
     },
     getInfo: function (req, res) {
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
             var token = req.headers.authorization.split(' ')[1];
             var decodedtoken = jwt.decode(token, config.secret);
-            return res.json({ success: true, massage: 'Hello, ' + decodedtoken.name })
+            return res.json({
+                success: true,
+                massage: 'Hello, ' + decodedtoken.name
+            })
         }
         else {
-            return res.json({ success: false, massage: 'No headers..!' })
+            return res.json({
+                success: false,
+                massage: 'No headers..!'
+            })
         }
     }
 }
