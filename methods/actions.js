@@ -8,31 +8,31 @@ var functions = {
 
     addNew: function (req, res) {
 
-        if ((!req.body.name) || (!req.body.password)) {
+        if ((!req.body.email) || (!req.body.password)) {
             res.status(403).send({ success: false, message: 'Enter all fields!' });
         }
         else {
             User.findOne({
-                name: req.body.name,
+                email: req.body.email,
             }, function (err, user) {
                 if (err) { throw err }
                 if (user) {
                     res.status(403).send({
                         success: false,
-                        message: `Saved Failed, User Name-: ${req.body.name} already exist..!`
+                        message: `Saved Failed, email already exist..!`
                     })
                 }
                 else {
                     var newUser = User({
-                        name: req.body.name,
+                        email: req.body.email,
                         password: req.body.password,
                     });
                     newUser.save(function (err, newUser) {
                         if (err) {
-                            res.json({ success: false, message: 'Failed to save' });
+                            res.json({ success: false, message: 'Failed to save..!' });
                         }
                         else {
-                            res.json({ success: true, message: `User Name-: '${req.body.name}' Successfully saved!` });
+                            res.json({ success: true, message: 'User Successfully saved..!' });
                         }
                     })
                 }
@@ -41,7 +41,7 @@ var functions = {
         }
     },
     authenticate: function (req, res) {
-        if ((!req.body.name) || (!req.body.password)) {
+        if ((!req.body.email) || (!req.body.password)) {
             res.status(403).send({
                 success: false,
                 message: 'Enter all fields!'
@@ -49,7 +49,7 @@ var functions = {
         }
         else {
             User.findOne({
-                name: req.body.name,
+                email: req.body.email,
             }, function (err, user) {
                 if (err) { throw err }
                 if (!user) {
@@ -82,7 +82,7 @@ var functions = {
             var decodedtoken = jwt.decode(token, config.secret);
             return res.status(200).send({
                 success: true,
-                message: 'Hello, ' + decodedtoken.name
+                message: 'Hello, User-->' + decodedtoken.email
             })
         }
         else {
