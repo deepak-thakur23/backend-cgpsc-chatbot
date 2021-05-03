@@ -5,11 +5,12 @@ const passport = require('passport');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const routes = require('./routes/index');
-
+const path = require('path');
 connectDB();
 
 const app = express();
-app.use(Express.static(__dirname + 'images'));
+app.use(Express.static(__dirname + '/images'));
+
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
