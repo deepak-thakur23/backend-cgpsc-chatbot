@@ -9,12 +9,12 @@ const path = require('path');
 connectDB();
 
 const app = express();
-app.use(Express.static(__dirname + '/images'));
+
 
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
-
+app.use(Express.static(__dirname + 'images'));
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
