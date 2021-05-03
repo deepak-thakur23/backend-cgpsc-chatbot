@@ -5,7 +5,7 @@ const passport = require('passport');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const routes = require('./routes/index');
-
+app.use(Express.static(__dirname + '/images'));
 connectDB();
 
 const app = express();
