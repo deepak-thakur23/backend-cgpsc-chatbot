@@ -16,7 +16,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 //app.use(express.static(path.join(__dirname, + 'images')));
 app.use(express.static(__dirname, + '/images'));
-console.log(`_dirname-->${__dirname}`);
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
