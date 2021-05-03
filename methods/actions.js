@@ -9,7 +9,10 @@ var functions = {
     addNew: function (req, res) {
 
         if ((!req.body.email) || (!req.body.password)) {
-            res.status(403).send({ success: false, message: 'Enter all fields!' });
+            // res.status(403).send({ success: false, message: 'Enter all fields!' });
+            res.status(403).send(
+                { success: false, message: 'Enter all fields!' }
+            )
         }
         else {
             User.findOne({
@@ -29,10 +32,10 @@ var functions = {
                     });
                     newUser.save(function (err, newUser) {
                         if (err) {
-                            res.json({ success: false, message: 'Failed to save..!' });
+                            res.status(403).send({ success: false, message: 'Failed to save..!' });
                         }
                         else {
-                            res.json({ success: true, message: 'User Successfully saved..!' });
+                            res.status(200).send({ success: true, message: 'User Successfully saved..!' });
                         }
                     })
                 }
@@ -62,7 +65,7 @@ var functions = {
                     user.comparePassword(req.body.password, function (err, isMatch) {
                         if (isMatch && !err) {
                             var token = jwt.encode(user, config.secret)
-                            res.send({ success: true, token: token })
+                            res.status(200).send({ success: true, message: 'Authenticated..!' })
                         }
                         else {
                             return res.status(403).send({
@@ -76,7 +79,6 @@ var functions = {
 
     },
     getInfo: function (req, res) {
-        console.log(`Backend Authorization--->${req.headers.authorization}`)
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
             var token = req.headers.authorization.split(' ')[1];
             var decodedtoken = jwt.decode(token, config.secret);
