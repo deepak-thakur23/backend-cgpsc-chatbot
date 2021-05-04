@@ -65,7 +65,7 @@ var functions = {
                     user.comparePassword(req.body.password, function (err, isMatch) {
                         if (isMatch && !err) {
                             var token = jwt.encode(user, config.secret)
-                            res.status(200).send({ success: true, token: token })
+                            res.status(200).send({ success: true, token: token, email: email })
                         }
                         else {
                             return res.status(403).send({
@@ -84,7 +84,7 @@ var functions = {
             var decodedtoken = jwt.decode(token, config.secret);
             return res.status(200).send({
                 success: true,
-                message: 'Hello, User-->' + decodedtoken.email
+                message: 'Welcome..' + decodedtoken.email
             })
         }
         else {
