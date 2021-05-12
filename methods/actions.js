@@ -8,7 +8,7 @@ var functions = {
 
     addNew: function (req, res) {
 
-        if ((!req.body.email) || (!req.body.password)) {
+        if ((!req.body.email) || (!req.body.password) || (!req.body.mobile)) {
             // res.status(403).send({ success: false, message: 'Enter all fields!' });
             res.status(403).send(
                 { success: false, message: 'Enter all fields!' }
@@ -22,61 +22,100 @@ var functions = {
                 if (user) {
                     res.status(403).send({
                         success: false,
-                        message: `Saved Failed, email already exist..!`
+                        message: `Saved Failed, user email already exist..!`
                     })
                 }
+                //
                 else {
-                    var newUser = User({
-                        email: req.body.email,
-                        password: req.body.password,
-                    });
-                    newUser.save(function (err, newUser) {
-                        if (err) {
-                            res.status(403).send({ success: false, message: 'Failed to save..!' });
+                    User.findOne({
+                        mobile: req.body.mobile,
+
+                    }, function (err, user) {
+                        if (err) { throw err }
+                        if (user) {
+                            res.status(403).send({
+                                success: false,
+                                message: `Saved Failed, user mobile no. already exist..!`
+                            })
                         }
                         else {
-                            res.status(200).send({ success: true, message: 'User Successfully saved..!' });
+                            var newUser = User({
+                                email: req.body.email,
+                                password: req.body.password,
+                            });
+                            newUser.save(function (err, newUser) {
+                                if (err) {
+                                    res.status(403).send({ success: false, message: 'Failed to create account..!' });
+                                }
+                                else {
+                                    res.status(200).send({ success: true, message: 'Created account Successfully..!' });
+                                }
+                            })
                         }
+
                     })
                 }
+                //               
             })
 
         }
     },
     authenticate: function (req, res) {
-        if ((!req.body.email) || (!req.body.password)) {
+        var chk = "";
+        if (((!req.body.email) || (!req.body.mobile)) && (!req.body.password)) {
             res.status(403).send({
                 success: false,
-                message: 'Enter all fields!'
+                message: 'Enter all required fields!'
             });
         }
         else {
-            User.findOne({
-                email: req.body.email,
-            }, function (err, user) {
-                if (err) { throw err }
-                if (!user) {
-                    res.status(403).send({
-                        success: false,
-                        message: 'Authentication Failed, User not found..!'
-                    })
-                }
-                else
-                    user.comparePassword(req.body.password, function (err, isMatch) {
-                        if (isMatch && !err) {
-                            var token = jwt.encode(user, config.secret)
-                            res.status(200).send({ success: true, token: token, email: req.body.email })
-                        }
-                        else {
-                            return res.status(403).send({
-                                success: false,
-                                message: 'Authentication Failed, Password incorrect..!'
-                            })
-                        }
-                    })
-            })
-        }
+            if (!req.body.mobile) {
+                User.findOne({
+                    email: req.body.email,
+                }, function (err, user) {
+                    if (err) { throw err }
+                    if (!user) {
+                        res.status(403).send({
+                            success: false,
+                            message: 'Authentication Failed, user email not found..!'
+                        })
+                    } else {
+                        chk = "Found"
+                    }
 
+                }
+                )
+            } else {
+                User.findOne({
+                    mobile: req.body.mobile,
+                }, function (err, user) {
+                    if (err) { throw err }
+                    if (!user) {
+                        res.status(403).send({
+                            success: false,
+                            message: 'Authentication Failed, user mobile no. not found..!'
+                        })
+                    } else {
+                        chk = "Found"
+                    }
+                }
+                )
+            }
+            if (chk == "Found") {
+                user.comparePassword(req.body.password, function (err, isMatch) {
+                    if (isMatch && !err) {
+                        var token = jwt.encode(user, config.secret)
+                        res.status(200).send({ success: true, token: token, email: req.body.email })
+                    }
+                    else {
+                        return res.status(403).send({
+                            success: false,
+                            message: 'Authentication Failed, Password incorrect..!'
+                        })
+                    }
+                })
+            }
+        }
     },
     getInfo: function (req, res) {
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
