@@ -82,8 +82,18 @@ var functions = {
                             message: 'Authentication Failed, user email not found..!'
                         })
                     } else {
-                        chk = true;
-                        console.log(`email ok:  ${chk}`);
+                        user.comparePassword(req.body.password, function (err, isMatch) {
+                            if (isMatch && !err) {
+                                var token = jwt.encode(user, config.secret)
+                                res.status(200).send({ success: true, token: token, email: req.body.email })
+                            }
+                            else {
+                                return res.status(403).send({
+                                    success: false,
+                                    message: 'Authentication Failed, Password incorrect..!'
+                                })
+                            }
+                        })
                     }
 
                 })
@@ -98,26 +108,21 @@ var functions = {
                             message: 'Authentication Failed, user mobile no. not found..!'
                         })
                     } else {
-                        chk = true;
-                        console.log(`mobile ok:  ${chk}`);
+                        user.comparePassword(req.body.password, function (err, isMatch) {
+                            if (isMatch && !err) {
+                                var token = jwt.encode(user, config.secret)
+                                res.status(200).send({ success: true, token: token, email: req.body.email })
+                            }
+                            else {
+                                return res.status(403).send({
+                                    success: false,
+                                    message: 'Authentication Failed, Password incorrect..!'
+                                })
+                            }
+                        })
                     }
                 })
             }
-        }
-        if (chk) {
-            console.log(`chk:  ${chk}`);
-            user.comparePassword(req.body.password, function (err, isMatch) {
-                if (isMatch && !err) {
-                    var token = jwt.encode(user, config.secret)
-                    res.status(200).send({ success: true, token: token, email: req.body.email })
-                }
-                else {
-                    return res.status(403).send({
-                        success: false,
-                        message: 'Authentication Failed, Password incorrect..!'
-                    })
-                }
-            })
         }
     },
     getInfo: function (req, res) {
