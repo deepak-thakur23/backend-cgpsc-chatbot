@@ -131,7 +131,9 @@ var functions = {
             var decodedtoken = jwt.decode(token, config.secret);
             return res.status(200).send({
                 success: true,
-                message: 'Welcome..' + decodedtoken.email
+                message: 'Welcome..' + decodedtoken.email,
+                mobile: decodedtoken.mobile,
+                email: decodedtoken.email
             })
         }
         else {
