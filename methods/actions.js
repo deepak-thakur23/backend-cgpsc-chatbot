@@ -8,6 +8,7 @@ var functions = {
 
     addNew: function (req, res) {
 
+        console.log(`${req.body.email}`)
         if ((!req.body.email) || (!req.body.password) || (!req.body.mobile)) {
             // res.status(403).send({ success: false, message: 'Enter all fields!' });
             res.status(403).send(
@@ -40,6 +41,7 @@ var functions = {
                         }
                         else {
                             var newUser = User({
+                                mobile: req.body.mobile,
                                 email: req.body.email,
                                 password: req.body.password,
                             });
@@ -48,7 +50,7 @@ var functions = {
                                     res.status(403).send({ success: false, message: 'Failed to create account..!' });
                                 }
                                 else {
-                                    res.status(200).send({ success: true, message: 'Created account Successfully..!' });
+                                    res.status(200).send({ success: true, message: 'Acount Created Successfully..!' });
                                 }
                             })
                         }
