@@ -103,7 +103,7 @@ var functions = {
                 }
                 )
             }
-            if (chk == "Found") {
+            if (chk === "Found") {
                 user.comparePassword(req.body.password, function (err, isMatch) {
                     if (isMatch && !err) {
                         var token = jwt.encode(user, config.secret)
