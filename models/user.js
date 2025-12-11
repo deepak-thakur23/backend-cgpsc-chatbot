@@ -2,10 +2,16 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var secret = require('../config/dbconfig').secret;
 var UserSchema = new mongoose.Schema({
+    username:{
+        type: String,
+        unique:true,
+        index:true,
+    },
     mobile: {
         type: String,
         unique: true,
         index: true,
+        match: [/\d{9}$/, 'is invalid']
     },
     email: {
         type: String,
@@ -19,8 +25,15 @@ var UserSchema = new mongoose.Schema({
     password: {
         type: String,
         require: true,
-    }
-
+    },
+    active: {
+        type: Boolean,
+        default: false,
+    },
+    admin: {
+        type: Boolean,
+        default: false,
+        },
 }, { timestamps: true });
 
 UserSchema.pre('save', function (next) {

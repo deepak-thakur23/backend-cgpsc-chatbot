@@ -16,7 +16,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 //app.use(express.static(path.join(__dirname, + 'images')));
 app.use(express.static(__dirname, + '/images'));
-app.use(cors());
+//app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_ORIGIN || "*",
+    credentials: true
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(routes);
@@ -25,4 +29,4 @@ require('./config/passport')(passport);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`))
+app.listen(PORT, () => console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`))

@@ -1,15 +1,16 @@
 var User = require('../models/user');
 var config = require('../config/dbconfig.js');
 var jwt = require('jwt-simple');
-const { authenticate } = require('passport');
-const user = require('../models/user');
+const { authenticate, serializeUser } = require('passport');
+var Profile = require('../models/profile');
+
 
 var functions = {
 
-    addNew: function (req, res) {
+    addNewUserAdmin: function (req, res) {
 
         console.log(`${req.body.email}`)
-        if ((!req.body.email) || (!req.body.password) || (!req.body.mobile)) {
+        if ((!req.body.email) || (!req.body.password) || (!req.body.mobile)|| (!req.body.fullname)) {
             // res.status(403).send({ success: false, message: 'Enter all fields!' });
             res.status(403).send(
                 { success: false, message: 'Enter all fields!' }
@@ -23,29 +24,29 @@ var functions = {
                 if (user) {
                     res.status(403).send({
                         success: false,
-                        message: `Saved Failed, user email already exist..!`
+                        message: `Saved Failed, user already exist..!`
                     })
                 }
                 //
                 else {
                     User.findOne({
                         mobile: req.body.mobile,
-
                     }, function (err, user) {
                         if (err) { throw err }
                         if (user) {
                             res.status(403).send({
                                 success: false,
-                                message: `Saved Failed, user mobile no. already exist..!`
+                                message: `Saved Failed, user  already exist..!`
                             })
                         }
                         else {
-                            var newUser = User({
-                                mobile: req.body.mobile,
-                                email: req.body.email,
-                                password: req.body.password,
-                            });
+                            var newUser = User(req.body
+                                // mobile: req.body.mobile,
+                                // email: req.body.email,
+                                // password: req.body.password,
+                            );
                             newUser.save(function (err, newUser) {
+
                                 if (err) {
                                     res.status(403).send({ success: false, message: 'Failed to create account..!' });
                                 }
@@ -62,67 +63,73 @@ var functions = {
 
         }
     },
+    addProfile: async function (req, res) {
+        if ((!req.body.firstName) || (!req.body.dob) || (!req.body.gender)) {
+            res.status(403).send(
+                { success: false, message: 'Enter all fields!' }
+            )
+        }
+        else {
+            await User.findOne({
+                mobile: req.body.mobile
+            }, async function (user, err) {
+                if (err) {
+                    res.status(403).send({ success: false, message: 'Failed to save profile..!' });
+                }
+                if (user) {
+                    try {
+                        let userId = user._id;
+                        console.log(`user.mobile: ${user.mobile} and user_id: ${userId}`)
+                        const profile = Profile(
+                            firstName = req.body.firstName,
+                            user = userId,
+                            dob = req.body.dob,
+                            gender = req.body.gender
+                        )
+                        data = await profile.save();
+                        res.status(200).json({ success: true, data: data });
+                    }
+                    catch (err) {
+                        res.status(400).json({ success: false, message: err.message });
+                    }
+
+                }
+            })
+        }
+    },
+
     authenticate: function (req, res) {
-        var chk = false;
-        if (((!req.body.email) || (!req.body.mobile)) && (!req.body.password)) {
+        if ((!req.body.username) && (!req.body.password)) {
             res.status(403).send({
                 success: false,
                 message: 'Enter all required fields!'
             });
         }
         else {
-            if (!req.body.mobile) {
-                User.findOne({
-                    email: req.body.email,
-                }, function (err, user) {
-                    if (err) { throw err }
-                    if (!user) {
-                        res.status(403).send({
-                            success: false,
-                            message: 'Authentication Failed, user email not found..!'
-                        })
-                    } else {
-                        user.comparePassword(req.body.password, function (err, isMatch) {
-                            if (isMatch && !err) {
-                                var token = jwt.encode(user, config.secret)
-                                res.status(200).send({ success: true, token: token, mobile: user.mobile, email: req.body.email })
-                            }
-                            else {
-                                return res.status(403).send({
-                                    success: false,
-                                    message: 'Authentication Failed, Password incorrect..!'
-                                })
-                            }
-                        })
-                    }
-
-                })
-            } else {
-                User.findOne({
-                    mobile: req.body.mobile,
-                }, function (err, user) {
-                    if (err) { throw err }
-                    if (!user) {
-                        res.status(403).send({
-                            success: false,
-                            message: 'Authentication Failed, user mobile no. not found..!'
-                        })
-                    } else {
-                        user.comparePassword(req.body.password, function (err, isMatch) {
-                            if (isMatch && !err) {
-                                var token = jwt.encode(user, config.secret)
-                                res.status(200).send({ success: true, token: token, email: user.email, mobile: req.body.mobile })
-                            }
-                            else {
-                                return res.status(403).send({
-                                    success: false,
-                                    message: 'Authentication Failed, Password incorrect..!'
-                                })
-                            }
-                        })
-                    }
-                })
-            }
+            User.findOne({
+                mobile: req.body.username,
+            }, function (err, user) {
+                if (err) { throw err }
+                if (!user) {
+                    res.status(403).send({
+                        success: false,
+                        message: 'Authentication Failed, user not found..!'
+                    })
+                } else {
+                    user.comparePassword(req.body.password, function (err, isMatch) {
+                        if (isMatch && !err) {
+                            var token = jwt.encode(user, config.secret)
+                            res.status(200).send({ success: true, token: token, mobile: req.body.username })
+                        }
+                        else {
+                            return res.status(403).send({
+                                success: false,
+                                message: 'Authentication Failed, Password incorrect..!'
+                            })
+                        }
+                    })
+                }
+            })
         }
     },
     getInfo: function (req, res) {
@@ -142,6 +149,7 @@ var functions = {
                 message: 'No headers..!'
             })
         }
-    }
+    },
+
 }
 module.exports = functions;
