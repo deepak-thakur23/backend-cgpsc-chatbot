@@ -372,7 +372,7 @@ var functions = {
                 });
             }
 
-            if (user.isActive !== true) {
+            if (user.isActive) {
                 return res.status(200).send({
                     success: false,
                     message: 'Your account is De-Activated..! Please ask to Admin..!',
