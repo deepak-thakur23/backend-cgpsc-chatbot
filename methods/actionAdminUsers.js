@@ -393,13 +393,11 @@ var functions = {
                     message: 'Password incorrect..!',
                 });
             }
-            if (user.isAdmin) {
-                if (user.superadmin) {
-                    user_role = "superadmin"
-                }
-                else {
-                    user_role = "admin"
-                }
+            if (user.superadmin) {
+                user_role = "superadmin"
+            }
+            else if (user.isAdmin) {
+                user_role = "admin"
             }
             else { user_role = "user" }
             // 5) Generate token
