@@ -393,17 +393,6 @@ var functions = {
                     message: 'Password incorrect..!',
                 });
             }
-            // 5) Generate token
-            const token = jwt.encode(
-                {
-                    id: user._id,
-                    username: user.username,
-                    isAdmin: user.isAdmin,
-                    super_admin: user.superadmin,
-                    section: user.section
-                },
-                config.secret
-            );
             if (user.isAdmin) {
                 if (user.superadmin) {
                     user_role = "superadmin"
@@ -413,10 +402,22 @@ var functions = {
                 }
             }
             else { user_role = "user" }
+            // 5) Generate token
+            const token = jwt.encode(
+                {
+                    id: user._id,
+                    role: user_role,
+                    username: user.username,
+                    isAdmin: user.isAdmin,
+                    super_admin: user.superadmin,
+                    section: user.section
+                },
+                config.secret
+            );
+
             // 6) Success response (DO NOT send password)
             return res.status(200).send({
                 success: true,
-                role: user_role,
                 message: 'Login successfully',
                 token: token,
                 fullname: user.fullname,
