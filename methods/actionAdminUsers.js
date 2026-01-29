@@ -417,6 +417,7 @@ var functions = {
             return res.status(200).send({
                 success: true,
                 message: 'Login successfully',
+                role: user_role,
                 token: token,
                 fullname: user.fullname,
                 mobile: user.mobile,
