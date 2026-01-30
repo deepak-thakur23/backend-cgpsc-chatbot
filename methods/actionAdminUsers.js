@@ -408,7 +408,9 @@ var functions = {
                     username: user.username,
                     isAdmin: user.isAdmin,
                     super_admin: user.superadmin,
-                    section: user.section
+                    section: user.section,
+                    mobile: user.mobile,
+                    email: user.email
                 },
                 config.secret
             );
@@ -419,9 +421,7 @@ var functions = {
                 message: 'Login successfully',
                 role: user_role,
                 token: token,
-                fullname: user.fullname,
-                mobile: user.mobile,
-                email: user.email
+                fullname: user.fullname
 
             });
 
@@ -429,7 +429,7 @@ var functions = {
             console.error('authenticateAdminUser error:', err);
             return res.status(500).send({
                 success: false,
-                message: 'Server error. Please try again LLLater.',
+                message: 'Server error. Please try again later.',
             });
         }
     },
