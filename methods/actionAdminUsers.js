@@ -421,8 +421,8 @@ var functions = {
                 token: token,
                 fullname: user.fullname,
                 mobile: user.mobile,
-                email: user.email,
-                img: user.img,
+                email: user.email
+
             });
 
         } catch (err) {
