@@ -394,7 +394,7 @@ var functions = {
                 });
             }
             if (user.superadmin) {
-                user_role = "superadmin"
+                user_role = "sadmin"
             }
             else if (user.isAdmin) {
                 user_role = "admin"
@@ -406,8 +406,6 @@ var functions = {
                     id: user._id,
                     role: user_role,
                     username: user.username,
-                    isAdmin: user.isAdmin,
-                    super_admin: user.superadmin,
                     section: user.section,
                     mobile: user.mobile,
                     email: user.email
