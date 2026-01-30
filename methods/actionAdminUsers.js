@@ -429,7 +429,7 @@ var functions = {
             console.error('authenticateAdminUser error:', err);
             return res.status(500).send({
                 success: false,
-                message: 'Server error. Please try again later.',
+                message: 'Server error. Please try again LLLater.',
             });
         }
     },
