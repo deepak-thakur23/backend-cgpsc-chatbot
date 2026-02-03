@@ -67,7 +67,7 @@ router.post('/api/auth/login', actionAdminUser.authenticateAdminUser)
 
 router.get('/getUserInfo', actionAdminUser.getInfoAdminUser)
 
-router.get('/getAllUsers', actionAdminUser.getAllUser)
+router.get('/api/admin/users/:section', actionAdminUser.getAllUser)
 
 router.put('/toActiveToggleStatus/:emailId', actionAdminUser.toUpdateActiveStatus)
 
