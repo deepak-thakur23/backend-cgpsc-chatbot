@@ -47,6 +47,7 @@ var functions = {
     },
     getAllUser: async function (req, res) {
         await AdminUser.find({ section: req.params.section }, async function (err, user) {
+            console.log("getting user--->" + req.params.section)
             if (err) { throw err }
             if (user) {
                 res.status(200).send(user);
